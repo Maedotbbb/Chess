@@ -1,2 +1,1 @@
-# Chess
-Chess game
+Simulator for Chess game. The game wont tell you every mistake and rule brake, it may allow you to break some rules so keep a sharp eye and play. The point this system is to allow people a digital alternative. 
