@@ -1,4 +1,4 @@
-package Project;
+package Project2;
 
 //Rook.java
 public class Rook extends Piece {
@@ -13,8 +13,8 @@ public class Rook extends Piece {
 
  @Override
  public boolean isValidMove(int startX, int startY, int endX, int endY, Piece[][] board) {
-     if (startX != endX && startY != endY) return false; // can only move in direction at a time
-     int stepX = Integer.compare(endX, startX); // if endX > startX : stepX =1 || If the opposite: -1 || If equal: 0
+     if (startX != endX && startY != endY) return false;
+     int stepX = Integer.compare(endX, startX);
      int stepY = Integer.compare(endY, startY);
      int x = startX + stepX, y = startY + stepY;
      while (x != endX || y != endY) {

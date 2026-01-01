@@ -1,128 +1,70 @@
-package Project;
+package Project2;
 
-//Game.java
+//import java.util.HashMap;
 import java.util.Scanner;
 
+//Game.java
 public class Game {
- private Board board;
+ public Board board;
  private boolean whiteTurn;
-
+ //HashMap<String, String> moveCount = new HashMap<String, String>();
+ 
  public Game() {
      board = new Board();
      whiteTurn = true;
  }
 
- public void start() {
-     Scanner scanner = new Scanner(System.in);
-     while (true) {
-         board.printBoard();
-         System.out.println((whiteTurn ? "White" : "Black") + "'s move (e.g. e2 e4):");
-         String move = scanner.nextLine();
-         if (move.equals("exit")) break;
-
-         String[] parts = move.split(" ");
-         if (parts.length != 2) {
-             System.out.println("Invalid input. Try again.");
-             continue;
-         }
-
-         int startX = 8 - Character.getNumericValue(parts[0].charAt(1));
-         int startY = parts[0].charAt(0) - 'a';
-         int endX = 8 - Character.getNumericValue(parts[1].charAt(1));
-         int endY = parts[1].charAt(0) - 'a';
-
-         if (startX < 0 || startY < 0 || endX < 0 || endY < 0 ||
-             startX > 7 || startY > 7 || endX > 7 || endY > 7) {
-             System.out.println("Move out of bounds. Try again.");
-             continue;
-         }
-
-         Piece selected = board.board[startX][startY];
-         if (selected == null || selected.isWhite() != whiteTurn) {
-             System.out.println("Invalid piece selection.");
-             continue;
-         }
-
-         if (selected.isValidMove(startX, startY, endX, endY, board.board)) {
-             board.board[endX][endY] = selected;
-             board.board[startX][startY] = null;
-             whiteTurn = !whiteTurn;
-         } else {
-             System.out.println("Invalid move.");
-         }
-     }
+ public Piece getPiece(int row, int col) {
+     return board.board[row][col];
  }
+
+ public boolean isWhiteTurn() {
+     return whiteTurn;
+ }
+
+ public boolean tryMove(int startX, int startY, int endX, int endY) {
+	    Piece selected = board.board[startX][startY];
+	    if (selected == null || selected.isWhite() != whiteTurn) return false;
+	    if (!selected.isValidMove(startX, startY, endX, endY, board.board)) return false;
+
+	    // Move the piece
+	    board.board[endX][endY] = selected;
+	    board.board[startX][startY] = null;
+
+	    // Pawn promotion
+	    if (selected instanceof Pawn) {
+	        if ((selected.isWhite() && endX == 0) || (!selected.isWhite() && endX == 7)) {
+	            promotePawn(endX, endY);
+	        }
+	    }
+
+	    whiteTurn = !whiteTurn;
+	    return true;
+	}
+ private void promotePawn(int x, int y) {
+	    Scanner scanner = new Scanner(System.in);
+	    System.out.println("Pawn promotion! Choose [Q]ueen, [R]ook, [B]ishop, or [N]ight:");
+	    char choice = scanner.next().charAt(0);
+	    boolean isWhite = board.board[x][y].isWhite();
+
+	    switch (choice) {
+	        case 'Q':
+	            board.board[x][y] = new Queen(isWhite);
+	            break;
+	        case 'R':
+	            board.board[x][y] = new Rook(isWhite);
+	            break;
+	        case 'B':
+	            board.board[x][y] = new Bishop(isWhite);
+	            break;
+	        case 'N':
+	            board.board[x][y] = new Knight(isWhite);
+	            break;
+	        default:
+	            System.out.println("Invalid choice. Defaulting to Queen.");
+	            board.board[x][y] = new Queen(isWhite);
+	            break;
+	    }
+	    scanner.close();
+	}
 }
-
-
-
-
-
-
-
-
-
-/*
-
-
-
- // Game.java
-import java.util.Scanner;
-
-public class Game {
-    private Board board;
-    private boolean whiteTurn;
-
-    public Game() {
-        board = new Board();
-        whiteTurn = true;
-    }
-
-    public void start() {
-        Scanner scanner = new Scanner(System.in);
-        while (true) {
-            board.printBoard();
-            System.out.println((whiteTurn ? "White" : "Black") + "'s move (e.g. e2 e4):");
-            String move = scanner.nextLine();
-            if (move.equals("exit")) break;
-            
-            // move with a word
-            String[] parts = move.split(" "); // example: parts[0]=e2 , parts[1]=e4
-            if (parts.length != 2) {
-                System.out.println("Invalid input. Try again.");
-                continue;
-            }
-
-            int startX = 8 - Character.getNumericValue(parts[0].charAt(1)); // here we can't use (int) because it will gets the asciiValue
-            int startY = parts[0].charAt(0) - 'a'; // e - a = 4 which is correct bc e==5 and we start from 0
-            int endX = 8 - Character.getNumericValue(parts[1].charAt(1)); // we're converting from character number to an int, not from a char like 'd'
-            int endY = Character.getNumericValue(parts[1].charAt(0))-1; 
-
-            if (!isValidCoordinate(startX, startY) || !isValidCoordinate(endX, endY)) {
-                System.out.println("Move out of bounds. Try again.");
-                continue;
-            }
-
-            Piece selected = board.board[startX][startY];
-            if (selected == null || selected.isWhite() != whiteTurn) {
-                System.out.println("Invalid piece selection.");
-                continue;
-            }
-
-            if (selected.isValidMove(startX, startY, endX, endY, board.board)) {
-                board.board[endX][endY] = selected;
-                board.board[startX][startY] = null;
-                whiteTurn = !whiteTurn;
-            } else {
-                System.out.println("Invalid move.");
-            }
-        }
-        scanner.close();
-    }
-
-    private boolean isValidCoordinate(int x, int y) {
-        return x >= 0 && x < 8 && y >= 0 && y < 8;
-    }
-}
-
-*/

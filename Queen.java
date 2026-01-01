@@ -1,4 +1,4 @@
-package Project;
+package Project2;
 
 //Queen.java
 public class Queen extends Piece {

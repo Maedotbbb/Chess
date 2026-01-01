@@ -1,9 +1,11 @@
-package Project;
+package Project2;
 
 //Main.java
 public class Main {
  public static void main(String[] args) {
-     Game game = new Game();
-     game.start();
+     javax.swing.SwingUtilities.invokeLater(() -> {
+         ChessGUI gui = new ChessGUI(new Game());
+         gui.setVisible(true);
+     });
  }
 }

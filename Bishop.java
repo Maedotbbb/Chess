@@ -1,4 +1,4 @@
-package Project;
+package Project2;
 
 //Bishop.java
 public class Bishop extends Piece {

@@ -1,4 +1,4 @@
-package Project;
+package Project2;
 
 //King.java
 public class King extends Piece {
